@@ -68,9 +68,9 @@ class _MyHomePageState extends State<MyHomePage> {
   int s = 0;
   int min, max, r, t, b;
   Random rnd;
-  String changetemp;
+  String changetemp = "";
   String status = "off";
-  String cond;
+  String cond ="";
 
   void _changetemp() {
     setState(() {
