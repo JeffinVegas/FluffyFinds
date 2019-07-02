@@ -71,10 +71,32 @@ class _MyHomePageState extends State<MyHomePage> {
   String changetemp = "";
   String status = "off";
   String cond ="";
+  var i;
+
+  void _randtemp() {
+      min = 0;
+      max = 2;
+      rnd = new Random();
+      r = min + rnd.nextInt(max - min);
+
+    if(r == 1) {
+      min = 70;
+      max = 75;
+      rnd = new Random();
+      r = min + rnd.nextInt(max - min);
+      //changetemp = r.toString();
+    }
+    else {
+      min = 93;
+      max = 98;
+      rnd = new Random();
+      r = min + rnd.nextInt(max - min);
+    }
+  }
 
   void _changetemp() {
-    setState(() {
-      s++;
+    setState(() async {
+      /*
       min = 0;
       max = 2;
       rnd = new Random();
@@ -94,13 +116,27 @@ class _MyHomePageState extends State<MyHomePage> {
       r = min + rnd.nextInt(max - min);
       //changetemp = r.toString();
     }
+    */
+
+    //WORK ON THIS
+    //StreamBuilder(
+      //stream: 
+      await Firestore.instance.collection('temperature').document('79wQd4mxeMego9DSEwDU').get().then((DocumentSnapshot ds)
+      {
+      //builder: (context, snapshot) {
+        //if (!snapshot.hasData) return Text('Loading...');
+        i = ds['temp'];
+      }
+    );
+    
+    //i = Firestore.instance.collection('temperature').document('79wQd4mxeMego9DSEwDU').snapshots();
     _collarstatus();
     });
   }
 
   void _collarstatus() {
     setState(() {
-      if(r > 92) status = "on";
+      if(i > 92) status = "on";
       else status = "off";
     });
   }
@@ -153,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Color(0xffddddff),
                   ),
                   padding: const EdgeInsets.all(10.0),
-                  child: Text(r.toString()),
+                  child: Text(i.toString()),
                 ),
                 ],
             ),
@@ -232,8 +268,9 @@ class _MyHomePageState extends State<MyHomePage> {
             leading: Icon(Icons.lightbulb_outline),
             title: Text('Firebase Test'),
             onTap: () {
-              Firestore.instance.collection('mountains').document()
-              .setData({ 'title': 'Mountain', 'author': 'Dad' });
+              _randtemp();
+              Firestore.instance.collection('temperature').document('79wQd4mxeMego9DSEwDU')
+              .setData({'temp': r });
               final snackBar = SnackBar(content: Text("hi"));
               Scaffold.of(context).showSnackBar(snackBar);
             },
