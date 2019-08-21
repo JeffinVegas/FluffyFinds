@@ -3,7 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 //import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+//ADDED
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 void main() => runApp(MyApp());
 
@@ -72,6 +74,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String status = "off";
   String cond ="";
   var i;
+  //ADDED
+  DatabaseReference ref = FirebaseDatabase.instance.reference();
 
   void _randtemp() {
       min = 0;
@@ -94,42 +98,21 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  
+
   void _changetemp() {
     setState(() async {
       /*
-      min = 0;
-      max = 2;
-      rnd = new Random();
-      r = min + rnd.nextInt(max - min);
-
-    if(r == 1) {
-      min = 70;
-      max = 75;
-      rnd = new Random();
-      r = min + rnd.nextInt(max - min);
-      //changetemp = r.toString();
-    }
-    else {
-      min = 93;
-      max = 98;
-      rnd = new Random();
-      r = min + rnd.nextInt(max - min);
-      //changetemp = r.toString();
-    }
-    */
-
-    //WORK ON THIS
-    //StreamBuilder(
-      //stream: 
       await Firestore.instance.collection('temperature').document('79wQd4mxeMego9DSEwDU').get().then((DocumentSnapshot ds)
       {
-      //builder: (context, snapshot) {
-        //if (!snapshot.hasData) return Text('Loading...');
         i = ds['temp'];
       }
-    );
+    );*/
+
+    await ref.child("temperature/temp").once().then((DataSnapshot dataSnapShot){
+		  i = dataSnapShot.value;
+	  });
     
-    //i = Firestore.instance.collection('temperature').document('79wQd4mxeMego9DSEwDU').snapshots();
     _collarstatus();
     });
   }
@@ -168,6 +151,37 @@ class _MyHomePageState extends State<MyHomePage> {
       //if(r <= 12) warning = " CHARGE BATTERY!!!";
     });
   }
+  // ADDED: https://www.youtube.com/watch?v=l8_7RTRRmHo
+  void _writeData()
+  {
+	ref.child("1").push().set({
+		'id':'ID1',
+		'data':'This is a sample Data'
+	});
+  }
+
+  void _updateData()
+  {
+    _randtemp();
+	ref.child("temperature").update({
+    'temp': r
+	});
+  }
+
+  /*
+  
+  
+  void _deleteData()
+  {
+	DBRef.child("1").remove();
+  }
+  */
+  //FLUTTER + FIREBASE - How To Add Firebase Real Time Database to Flutter (Android and iOS):
+  //https://www.youtube.com/watch?v=rWXaiwN2FzE
+  //Firebase Database : Creating Data in Firebase Relatime Database | CRUD | by Nitish Kumar Singh
+  //https://www.youtube.com/watch?v=bBwgQ6_lfsk
+  //Using Cloud Firestore as a Realtime Datastore for CRUD with Dart's Flutter Framework
+  //https://www.youtube.com/watch?v=OJ_u34bD_q8
 
   @override
   Widget build(BuildContext context) {
@@ -268,11 +282,13 @@ class _MyHomePageState extends State<MyHomePage> {
             leading: Icon(Icons.lightbulb_outline),
             title: Text('Firebase Test'),
             onTap: () {
-              _randtemp();
+              /*
               Firestore.instance.collection('temperature').document('79wQd4mxeMego9DSEwDU')
               .setData({'temp': r });
               final snackBar = SnackBar(content: Text("hi"));
               Scaffold.of(context).showSnackBar(snackBar);
+              */
+              _updateData();
             },
           ),
         ),
