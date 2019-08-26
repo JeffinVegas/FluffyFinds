@@ -73,9 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
   String changetemp = "";
   String status = "off";
   String cond ="";
-  var i;
+  var i, j, k;
   //ADDED
   DatabaseReference ref = FirebaseDatabase.instance.reference();
+  DatabaseReference ref2 = FirebaseDatabase.instance.reference();
 
   void _randtemp() {
       min = 0;
@@ -100,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   
 
-  void _changetemp() {
+  void _changeInfo() {
     setState(() async {
       /*
       await Firestore.instance.collection('temperature').document('79wQd4mxeMego9DSEwDU').get().then((DocumentSnapshot ds)
@@ -109,9 +110,19 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     );*/
 
-    await ref.child("temperature/temp").once().then((DataSnapshot dataSnapShot){
-		  i = dataSnapShot.value;
-	  });
+    _updateData();
+
+      await ref.child("temperature/temp").once().then((DataSnapshot dataSnapShot){
+		    i = dataSnapShot.value;
+	    });
+
+      await ref.child("house/status").once().then((DataSnapshot dataSnap){
+        j = dataSnap.value;
+	    });
+
+      await ref.child("battery/level").once().then((DataSnapshot dataSnap){
+        k = dataSnap.value;
+	    });
     
     _collarstatus();
     });
@@ -125,18 +136,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _inouthouse() {
-    setState(() {
+    setState(() async {
       //var now = new DateTime.now();
       //var formatter = new DateFormat('EEEE');
       //String formatted = formatter.format(now);
       //print(formatted);
       //Random rnd;
-      min = 0;
-      max = 10;
-      rnd = new Random();
-      t = min + rnd.nextInt(max - min);
-      if(t % 2 == 0) cond = "OUTSIDE";
-      else cond = "INSIDE";
+      
+      
     });
   }
 
@@ -162,10 +169,35 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _updateData()
   {
+    //TEMPERATURE
     _randtemp();
-	ref.child("temperature").update({
-    'temp': r
-	});
+
+	  ref.child("temperature").update({
+      'temp': r
+  	});
+
+    // INSIDE OR OUTSIDE
+    min = 0;
+    max = 10;
+    rnd = new Random();
+    t = min + rnd.nextInt(max - min);
+    if(t % 2 == 0) cond = "OUTSIDE";
+    else cond = "INSIDE";
+
+    ref.child("house").update({
+      'status': cond
+	  });
+    
+    // BATTERY
+    min = 0;
+    max = 9;
+    rnd = new Random();
+    b = min + rnd.nextInt(max-min);
+    b = b * 12;
+
+    ref.child("battery").update({
+      'level': b
+	  });
   }
 
   /*
@@ -189,6 +221,19 @@ class _MyHomePageState extends State<MyHomePage> {
     elevation: 10.0,
     child: ListView(
       children: <Widget>[
+        Container(
+          height: 50.0,
+          width: 50.0,
+          child: FittedBox(
+            child: RaisedButton(
+              color: Colors.lightGreenAccent[100],
+              onPressed: () {
+                _changeInfo();
+              },
+              child: Text('Update Info'),
+            ),
+          ),
+        ),
         Card(
           elevation: 10.0,
           child: ListTile(            
@@ -207,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 ],
             ),
-            onTap: _changetemp,
+            //onTap: _changetemp,
           ),
         ),
         Card(
@@ -245,7 +290,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Color(0xffddddff),
                   ),
                   padding: const EdgeInsets.all(10.0),
-                  child: Text(cond),
+                  child: Text(j.toString()),
                 ),
                 ],
             ),
@@ -271,9 +316,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 ],
             ),
-            onTap: _batterystatus,
+            //onTap: _batterystatus,
           ),
         ),
+        /*
         Card(
           color: Colors.redAccent[100],
           borderOnForeground: false,
@@ -291,7 +337,7 @@ class _MyHomePageState extends State<MyHomePage> {
               _updateData();
             },
           ),
-        ),
+        ),*/
         Card(
           color: Colors.lightBlueAccent[100],
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
