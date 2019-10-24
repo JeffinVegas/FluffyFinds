@@ -15,7 +15,6 @@ class _PetAPage extends State<_PetA> {
   String status = "off";
   String cond ="";
   var i, j, k, l;
-  //ADDED
   DatabaseReference ref = FirebaseDatabase.instance.reference();
   DatabaseReference ref2 = FirebaseDatabase.instance.reference();
 
@@ -52,12 +51,6 @@ class _PetAPage extends State<_PetA> {
 
   void _changeInfo() {
     setState(() async {
-      /*
-      await Firestore.instance.collection('temperature').document('79wQd4mxeMego9DSEwDU').get().then((DocumentSnapshot ds)
-      {
-        i = ds['temp'];
-      }
-    );*/
 
     _updateData();
 
@@ -114,21 +107,6 @@ class _PetAPage extends State<_PetA> {
       'battery': b
     });
   }
-
-  /*
-  
-  
-  void _deleteData()
-  {
-	DBRef.child("1").remove();
-  }
-  */
-  //FLUTTER + FIREBASE - How To Add Firebase Real Time Database to Flutter (Android and iOS):
-  //https://www.youtube.com/watch?v=rWXaiwN2FzE
-  //Firebase Database : Creating Data in Firebase Relatime Database | CRUD | by Nitish Kumar Singh
-  //https://www.youtube.com/watch?v=bBwgQ6_lfsk
-  //Using Cloud Firestore as a Realtime Datastore for CRUD with Dart's Flutter Framework
-  //https://www.youtube.com/watch?v=OJ_u34bD_q8
 
   @override
   Widget build(BuildContext context) {
@@ -270,13 +248,6 @@ class _PetAPage extends State<_PetA> {
             leading: Icon(Icons.map),
             title: Text('GPS'),
             onTap: () async {
-              //print('Working on it...');
-              /*const url = 'https://maps.google.com';
-              if (await canLaunch(url)) {
-                await launch(url);
-              } else {
-                throw 'Could not launch $url';
-              }*/
               MapUtils.openMap();
               final snackBar = SnackBar(content: Text("Working on it..."));
               Scaffold.of(context).showSnackBar(snackBar);
@@ -287,5 +258,5 @@ class _PetAPage extends State<_PetA> {
     ),
   ),
     );
-}
+  }
 }
