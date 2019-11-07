@@ -30,40 +30,6 @@ class Pet {
   } 
 
 }
-// class Help extends StatefulWidget {
-//   Help({Key key, this.title}) : super(key: key);
-
-//   final String title;
-
-//   @override
-  
-//   _HelpPage createState() => _HelpPage();
-// }
-
-// class _HelpPage extends State<Help>  {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             RaisedButton(
-//               child: Text("Start"),
-//               onPressed: () {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(builder: (context) => Home()),
-//                 );
-//               },
-//             ),
-//           ],
-//         ),        
-//       ),
-//     );
-//   }
-// }
 
 class Home extends StatefulWidget {
   Home({Key key, this.title}) : super(key: key);
