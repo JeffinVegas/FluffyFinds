@@ -16,7 +16,7 @@ class _PetBPage extends State<_PetB> {
   String status = "off";
   String cond = "";
   String newName = "";
-  var i, j, k, l;
+  var i, j, k, l, m, n;
   DatabaseReference ref = FirebaseDatabase.instance.reference();
   DatabaseReference ref2 = FirebaseDatabase.instance.reference();
 
@@ -58,11 +58,8 @@ class _PetBPage extends State<_PetB> {
         i = dataSnap.value;
       });
 
-      await ref
-          .child("petB/temperature")
-          .once()
-          .then((DataSnapshot dataSnapShot) {
-        j = dataSnapShot.value;
+      await ref.child("petB/temperature").once().then((DataSnapshot dataSnap) {
+        j = dataSnap.value;
       });
 
       await ref.child("petB/house").once().then((DataSnapshot dataSnap) {
@@ -71,6 +68,14 @@ class _PetBPage extends State<_PetB> {
 
       await ref.child("petB/battery").once().then((DataSnapshot dataSnap) {
         l = dataSnap.value;
+      });
+
+      await ref.child("petB/latitude").once().then((DataSnapshot dataSnap) {
+        m = dataSnap.value;
+      });
+
+      await ref.child("petB/longitude").once().then((DataSnapshot dataSnap) {
+        n = dataSnap.value;
       });
 
       _collarstatus();
@@ -114,6 +119,18 @@ class _PetBPage extends State<_PetB> {
     ref.child("petB").update({'name': name});
 
     _changeInfo();
+  }
+
+  void findLocation() async {
+    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=' +
+        m.toString() +
+        ',' +
+        n.toString();
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    } else {
+      throw 'Could not open map';
+    }
   }
 
   @override
@@ -294,9 +311,9 @@ class _PetBPage extends State<_PetB> {
               elevation: 10.0,
               child: ListTile(
                 leading: Icon(Icons.map),
-                title: Text('GPS'),
+                title: Text('Get Location'),
                 onTap: () async {
-                  MapUtils.openMap();
+                  findLocation();
                   final snackBar = SnackBar(content: Text("Working on it..."));
                   Scaffold.of(context).showSnackBar(snackBar);
                 },

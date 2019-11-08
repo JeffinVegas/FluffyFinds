@@ -15,7 +15,7 @@ class _PetAPage extends State<_PetA> {
   String status = "off";
   String cond = "";
   String newName = "";
-  var i, j, k, l;
+  var i, j, k, l, m, n;
   DatabaseReference ref = FirebaseDatabase.instance.reference();
   DatabaseReference ref2 = FirebaseDatabase.instance.reference();
 
@@ -51,17 +51,12 @@ class _PetAPage extends State<_PetA> {
 
   void _changeInfo() {
     setState(() async {
-      _updateData();
-
       await ref.child("petA/name").once().then((DataSnapshot dataSnap) {
         i = dataSnap.value;
       });
 
-      await ref
-          .child("petA/temperature")
-          .once()
-          .then((DataSnapshot dataSnapShot) {
-        j = dataSnapShot.value;
+      await ref.child("petA/temperature").once().then((DataSnapshot dataSnap) {
+        j = dataSnap.value;
       });
 
       await ref.child("petA/house").once().then((DataSnapshot dataSnap) {
@@ -70,6 +65,14 @@ class _PetAPage extends State<_PetA> {
 
       await ref.child("petA/battery").once().then((DataSnapshot dataSnap) {
         l = dataSnap.value;
+      });
+
+      await ref.child("petA/latitude").once().then((DataSnapshot dataSnap) {
+        m = dataSnap.value;
+      });
+
+      await ref.child("petA/longitude").once().then((DataSnapshot dataSnap) {
+        n = dataSnap.value;
       });
 
       _collarstatus();
@@ -85,34 +88,23 @@ class _PetAPage extends State<_PetA> {
     });
   }
 
-  void _updateData() {
-    //TEMPERATURE
-    _randtemp();
-
-    // INSIDE OR OUTSIDE
-    min = 0;
-    max = 10;
-    rnd = new Random();
-    t = min + rnd.nextInt(max - min);
-    if (t % 2 == 0)
-      cond = "OUTSIDE";
-    else
-      cond = "INSIDE";
-
-    // BATTERY
-    min = 0;
-    max = 9;
-    rnd = new Random();
-    b = min + rnd.nextInt(max - min);
-    b = b * 12;
-
-    ref.child("petA").update({'temperature': r, 'house': cond, 'battery': b});
-  }
-
   void _updateName(String name) {
     ref.child("petA").update({'name': name});
-
     _changeInfo();
+  }
+
+  void findLocation() async {
+    //Future.delayed(const Duration(milliseconds: 2000));
+    //_changeInfo();
+    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=' +
+        m.toString() +
+        ',' +
+        n.toString();
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    } else {
+      throw 'Could not open map';
+    }
   }
 
   @override
@@ -280,7 +272,7 @@ class _PetAPage extends State<_PetA> {
                         color: Color(0xffddddff),
                       ),
                       padding: const EdgeInsets.all(10.0),
-                      child: Text("$b%"),
+                      child: Text(l.toString()+'%'),
                     ),
                   ],
                 ),
@@ -293,9 +285,9 @@ class _PetAPage extends State<_PetA> {
               elevation: 10.0,
               child: ListTile(
                 leading: Icon(Icons.map),
-                title: Text('GPS'),
+                title: Text('Get Location'),
                 onTap: () async {
-                  MapUtils.openMap();
+                  findLocation();
                   final snackBar = SnackBar(content: Text("Working on it..."));
                   Scaffold.of(context).showSnackBar(snackBar);
                 },
