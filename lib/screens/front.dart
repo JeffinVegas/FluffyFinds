@@ -11,14 +11,18 @@ class Pet {
   String house;
   String name;
   int temperature;
+  double latitudes;
+  double longtitudes;
 
-  Pet(this.battery, this.house, this.name, this.temperature);
+  Pet(this.battery, this.house, this.name, this.temperature, this.latitudes, this.longtitudes);
 
   Pet.fromSnapshot(DataSnapshot snapshot):
     battery = snapshot.value["battery"],
     house = snapshot.value["house"],
     name = snapshot.value['name'],
-    temperature = snapshot.value["temperature"];
+    temperature = snapshot.value["temperature"],
+    latitudes = snapshot.value["latitude"],
+    longtitudes = snapshot.value["longtitude"];
 
   toJson() {
     return {
@@ -26,44 +30,13 @@ class Pet {
       "house": house,
       "name": name,
       "temperature": temperature,
+      "latitude": latitudes,
+      "longtitude": longtitudes,
     };
   } 
 
 }
-// class Help extends StatefulWidget {
-//   Help({Key key, this.title}) : super(key: key);
 
-//   final String title;
-
-//   @override
-  
-//   _HelpPage createState() => _HelpPage();
-// }
-
-// class _HelpPage extends State<Help>  {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             RaisedButton(
-//               child: Text("Start"),
-//               onPressed: () {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(builder: (context) => Home()),
-//                 );
-//               },
-//             ),
-//           ],
-//         ),        
-//       ),
-//     );
-//   }
-// }
 
 class Home extends StatefulWidget {
   Home({Key key, this.title}) : super(key: key);
@@ -103,50 +76,66 @@ class _HomePage extends State<Home>  {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: new FutureBuilder(
-        future: FirebaseDatabase.instance.reference()
-          .child('petA').once(),                   
-        builder: (context, snapshot){
-          switch (snapshot.connectionState){
-            case ConnectionState.none:
-            case ConnectionState.active:
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-            case ConnectionState.done:
-              if(snapshot.hasError){
-                return Center(child: Text('Error: ${snapshot.error}'));
-              }
-              else {
-                Pet pets = Pet.fromSnapshot(snapshot.data);
-                return new Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      RaisedButton(
-                        child: Text(pets.name),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => _PetA()),
-                          );
-                        },
-                      ),
-                      RaisedButton(
-                        child: Text('Pet 2'),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => _PetB()),
-                          );
-                        },
-                      ),
-                    ],
-                  ),        
-                );
-              }
-          }
-        }
-      )  
+      body: new Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              child: FutureBuilder(
+                future: FirebaseDatabase.instance.reference().child('petA').once(),
+                builder:(context, snapshot){
+                  switch(snapshot.connectionState){
+                    case ConnectionState.none:
+                    case ConnectionState.active:
+                    case ConnectionState.waiting:
+                      return Center(child: CircularProgressIndicator());
+                    case ConnectionState.done:
+                      if(snapshot.hasError){
+                        return new Center(child: Text('Error: ${snapshot.error}'));
+                      }
+                      else {
+                        Pet petA = Pet.fromSnapshot(snapshot.data);
+                        return RaisedButton(
+                          child: Text(petA.name),
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => _PetA()));
+                          }
+                        );
+                      }
+                  }
+                }
+              ),
+            ),
+            Container(
+              child: FutureBuilder(
+                future: FirebaseDatabase.instance.reference().child('petB').once(),
+                builder:(context, snapshot){
+                  switch(snapshot.connectionState){
+                    case ConnectionState.none:
+                    case ConnectionState.active:
+                    case ConnectionState.waiting:
+                      return Center(child: CircularProgressIndicator());
+                    case ConnectionState.done:
+                      if(snapshot.hasError){
+                        return new Center(child: Text('Error: ${snapshot.error}'));
+                      }
+                      else {
+                        Pet petA = Pet.fromSnapshot(snapshot.data);
+                        return RaisedButton(
+                          child: Text(petA.name),
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => _PetA()));
+                          }
+                        );
+                      }
+                  }
+                }
+              )
+            )
+          ],
+        ),
+      )
     );
   }
 }
