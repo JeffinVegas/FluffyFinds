@@ -5,7 +5,6 @@ import 'package:firebase_database/firebase_database.dart';
 part 'petA.dart';
 part 'petB.dart';
 
-
 class Pet {
   int battery;
   String house;
@@ -33,10 +32,8 @@ class Pet {
       "latitude": latitudes,
       "longtitude": longtitudes,
     };
-  } 
-
+  }
 }
-
 
 class Home extends StatefulWidget {
   Home({Key key, this.title}) : super(key: key);
@@ -44,35 +41,13 @@ class Home extends StatefulWidget {
   final String title;
 
   @override
-  
   _HomePage createState() => _HomePage();
 }
 
-class _HomePage extends State<Home>  {
-  
-
+class _HomePage extends State<Home> {
   var i;
   DatabaseReference ref = FirebaseDatabase.instance.reference();
 
-  @override
-  void initState() {
-    _getThingsOnStartup();
-    super.initState();
-  }
-
-  Future _getThingsOnStartup() async {
-    _changeInfo();
-  }
-
-  void _changeInfo() {
-    setState(() async {
-    await ref.child("petA/name").once().then((DataSnapshot dataSnap){
-      i = dataSnap.value;
-    });
-
-    });
-  }
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,17 +112,5 @@ class _HomePage extends State<Home>  {
         ),
       )
     );
-  }
-}
-
-class MapUtils {
-
-  static openMap() async {
-    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=36.1085,-115.1432';
-    if (await canLaunch(googleUrl)) {
-      await launch(googleUrl);
-    } else {
-      throw 'Could not open the map.';
-    }
   }
 }
