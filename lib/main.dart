@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       title: 'FluffyFinds',
       theme: ThemeData(
 
-        primarySwatch: Colors.pink,
+        primarySwatch: Colors.redAccent,
       ),
       home: Scaffold(
         appBar: AppBar(title: Text('FluffyFinds Prototype'), centerTitle: true),
