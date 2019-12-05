@@ -110,7 +110,7 @@ class _PetAPage extends State<_PetA> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('FluffyFinds Prototype'), centerTitle: true),
+      appBar: AppBar(title: Text(i.toString()), centerTitle: true),
       body: Card(
         elevation: 10.0,
         child: ListView(

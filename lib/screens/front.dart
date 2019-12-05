@@ -14,7 +14,7 @@ class Pet {
   int battery;
   String house;
   String name;
-  int temperature;
+  double temperature;
   double latitudes;
   double longtitudes;
   String picture;
@@ -154,7 +154,7 @@ class _HomePage extends State<Home> {
                                   backgroundImage: CachedNetworkImageProvider(petB.picture),
                               ),
                               onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => _PetA()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => _PetB()));
                               }
                             ),
                             SizedBox(width: 10),
